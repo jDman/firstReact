@@ -4,17 +4,39 @@ var ShowAddButton = require('./ShowAddButton');
 var FeedForm      = require('./FeedForm');
 var FeedList      = require('./FeedList');
 var _             = require('lodash');
+var Firebase      = require('firebase');
 
 var Feed = React.createClass({
 
+  loadData: function () {
+    var ref = new Firebase('https://intense-heat-9645.firebaseio.com/feed');
+    ref.on('value', function (snap) {
+      var items = [];
+      var sorted = [];
+
+      snap.forEach(function (itemSnap) {
+        var item = itemSnap.val();
+        item.id = itemSnap.key();
+        items.push(item);
+      });
+
+      sorted = _.sortBy(items, function (item) {
+        return -item.voteCount;
+      });
+
+      this.setState({
+        items: sorted
+      });
+    }.bind(this));
+  },
+
+  componentDidMount: function() {
+    this.loadData();
+  },
+
   getInitialState: function() {
-    var FEED_ITEMS = [
-      { id: '1', title: 'Realtime data!', description: 'Firebase is cool', voteCount: 49 },
-      { id: '2', title: 'JavaScript is fun', description: 'Lexical scoping FTW', voteCount: 34},
-      { id: '3', title: 'Coffee makes you awake', description: 'Drink responsibly', voteCount: 15},
-    ];
     return {
-      items: FEED_ITEMS,
+      items: [],
       formDisplayed: false
     }
   },
@@ -26,25 +48,13 @@ var Feed = React.createClass({
   },
 
   onNewItem: function(newItem) {
-    var newItems = this.state.items.concat([newItem]);
-    this.setState({
-      items: newItems,
-      formDisplayed: false,
-      id: this.state.items.length
-    });
+    var ref = new Firebase('https://intense-heat-9645.firebaseio.com/feed');
+    ref.push(newItem);
   },
 
   onVote: function(item) {
-    var items = _.uniq(this.state.items);
-    var index = _.findIndex(items, function(feedItems) {
-      return feedItems.id === item.id;
-    });
-    var oldObj = items[index];
-    var newItems = _.pull(items, oldObj);
-    newItems.push(item);
-    this.setState({
-      items: newItems
-    });
+    var ref = new Firebase('https://intense-heat-9645.firebaseio.com/feed').child(item.id);
+    ref.update(item);
   },
 
   render: function() {
