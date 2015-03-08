@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 
-var React = require('React');
+var React = require('react');
 
 var FeedForm = React.createClass({
 
-  handleForm: function (e) {
+  handleForm: function(e) {
     e.preventDefault();
 
     var newItem = {
@@ -20,24 +20,25 @@ var FeedForm = React.createClass({
   },
 
   render: function() {
-
     var display = this.props.displayed ? 'block' : 'none';
-
     var styles = {
       display: display
     };
-
-    return(
+    return (
       <form ref="feedForm" style={styles} id="feedForm" className="container" onSubmit={this.handleForm}>
+
         <div className="form-group">
+
           <input ref="title" type="text" className="form-control" placeholder="Title" />
           <input ref="desc" type="text" className="form-control" placeholder="Description" />
+
           <button type="submit" className="btn btn-primary btn-block">Add</button>
         </div>
+
       </form>
     );
-   }
+  }
 
- });
+});
 
 module.exports = FeedForm;

@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-var React = require('React');
+var React = require('react');
 
 var ShowAddButton = React.createClass({
 
@@ -8,7 +8,7 @@ var ShowAddButton = React.createClass({
 
     var classString, buttonText;
 
-    if(this.props.displayed){
+    if(this.props.displayed) {
       classString = 'btn btn-default btn-block';
       buttonText = 'Cancel';
     } else {
@@ -16,11 +16,14 @@ var ShowAddButton = React.createClass({
       buttonText = 'Create New Item';
     }
 
-    return(
-      <button className={classString} onClick={this.props.onToggleForm}>{buttonText}</button>
+    return (
+      <button className={classString}
+              onClick={this.props.onToggleForm}>
+              {buttonText}
+      </button>
     );
-   }
+  }
 
- });
+});
 
 module.exports = ShowAddButton;

@@ -1,46 +1,49 @@
 /** @jsx React.DOM */
 
-var React = require('React');
+var React = require('react');
 
 var FeedItem = React.createClass({
 
-  vote: function (newCount) {
-    console.log(this.props);
+  vote: function(newCount) {
     this.props.onVote({
-      key: this.props.key,
+      id: this.props.id,
       title: this.props.title,
       description: this.props.desc,
       voteCount: newCount
     });
   },
 
-  voteUp: function () {
+  voteUp: function() {
     var count = parseInt(this.props.voteCount, 10);
     var newCount = count + 1;
     this.vote(newCount);
   },
 
-  voteDown: function () {
+  voteDown: function() {
     var count = parseInt(this.props.voteCount, 10);
     var newCount = count - 1;
     this.vote(newCount);
   },
 
   render: function() {
-    return(
-      <li key={this.props.key} className="list-group-item">
-        <span className="badge badge-success">{this.props.voteCount}</span>
-        <span>{this.props.key}</span>
+
+    var positiveNegativeClassName = this.props.voteCount >= 0 ?
+                                    'badge badge-success' :
+                                    'badge badge-danger';
+
+    return (
+      <li id={this.props.id} className="list-group-item">
+        <span className={positiveNegativeClassName}>{this.props.voteCount}</span>
         <h4>{this.props.title}</h4>
         <span>{this.props.desc}</span>
         <span className="pull-right">
-            <button id="up" className="btn btn-sm btn-primary" onClick={this.voteUp}>&uarr;</button>
-            <button id="down" className="btn btn-sm btn-primary" onClick={this.voteDown}>&darr;</button>
-          </span>
+          <button id="up" className="btn btn-sm btn-primary" onClick={this.voteUp}>&uarr;</button>
+          <button id="down" className="btn btn-sm btn-primary" onClick={this.voteDown}>&darr;</button>
+        </span>
       </li>
     );
-   }
+  }
 
- });
+});
 
- module.exports = FeedItem;
+module.exports = FeedItem;
