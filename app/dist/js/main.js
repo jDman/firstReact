@@ -95,6 +95,7 @@ var FeedForm = React.createClass({displayName: "FeedForm",
     var newItem = {
       title: this.refs.title.getDOMNode().value,
       description: this.refs.desc.getDOMNode().value,
+      isbn: this.refs.isbn.getDOMNode().value,
       voteCount: 0
     };
 
@@ -116,6 +117,7 @@ var FeedForm = React.createClass({displayName: "FeedForm",
 
           React.createElement("input", {ref: "title", type: "text", className: "form-control", placeholder: "Title"}), 
           React.createElement("input", {ref: "desc", type: "text", className: "form-control", placeholder: "Description"}), 
+          React.createElement("input", {ref: "isbn", type: "text", className: "form-control", placeholder: "ISBN eg: 0871404532"}), 
 
           React.createElement("button", {type: "submit", className: "btn btn-primary btn-block"}, "Add")
         )
@@ -139,6 +141,7 @@ var FeedItem = React.createClass({displayName: "FeedItem",
   vote: function(newCount) {
     this.props.onVote({
       id: this.props.id,
+      isbn: this.props.isbn,
       title: this.props.title,
       description: this.props.desc,
       voteCount: newCount
@@ -162,16 +165,31 @@ var FeedItem = React.createClass({displayName: "FeedItem",
     var positiveNegativeClassName = this.props.voteCount >= 0 ?
                                     'badge badge-success' :
                                     'badge badge-danger';
+    var isbn = this.props.isbn;
+
+
+    var source = "http://images.amazon.com/images/P/" + isbn + ".ZTZZZZZZ.jpg";
+
+    var url = "http://www.amazon.co.uk/gp/product/" + isbn;
 
     return (
-      React.createElement("li", {id: this.props.id, className: "list-group-item"}, 
-        React.createElement("span", {className: positiveNegativeClassName}, this.props.voteCount), 
-        React.createElement("h4", null, this.props.title), 
-        React.createElement("span", null, this.props.desc), 
-        React.createElement("span", {className: "pull-right"}, 
-          React.createElement("button", {id: "up", className: "btn btn-sm btn-primary", onClick: this.voteUp}, "↑"), 
-          React.createElement("button", {id: "down", className: "btn btn-sm btn-primary", onClick: this.voteDown}, "↓")
+      React.createElement("div", {id: this.props.id, className: "col-md-6 clearfix bookitem"}, 
+        React.createElement("div", {className: "col-md-6"}, 
+          React.createElement("a", {href: url, target: "_blank"}, 
+            React.createElement("img", {src: source, className: "img-thumbnail coverimg", alt: this.props.title})
+          ), 
+          React.createElement("p", {className: "buy-book"}, React.createElement("a", {href: url, target: "_blank", className: "btn btn-info"}, "Buy from Amazon"))
+
+        ), 
+        React.createElement("div", {className: "col-md-6"}, 
+          React.createElement("h4", null, this.props.title, " ", React.createElement("span", {className: positiveNegativeClassName}, this.props.voteCount)), 
+          React.createElement("p", null, 
+            React.createElement("button", {id: "up", className: "btn btn-sm btn-success", onClick: this.voteUp}, React.createElement("i", {className: "fa fa-thumbs-o-up"})), 
+            React.createElement("button", {id: "down", className: "btn btn-sm btn-danger", onClick: this.voteDown}, React.createElement("i", {className: "fa fa-thumbs-o-down"}))
+          ), 
+          React.createElement("p", null, this.props.desc)
         )
+
       )
     );
   }
@@ -195,15 +213,14 @@ var FeedList = React.createClass({displayName: "FeedList",
       return React.createElement(FeedItem, {id: item.id, 
                        title: item.title, 
                        desc: item.description, 
+                       isbn: item.isbn, 
                        voteCount: item.voteCount, 
                        onVote: this.props.onVote})
     }.bind(this));
 
     return (
-      React.createElement("div", {className: "container"}, 
-        React.createElement("ul", {className: "list-group"}, 
+      React.createElement("div", {className: "container clearfix"}, 
           feedItems
-        )
       )
     );
   }
@@ -225,11 +242,11 @@ var ShowAddButton = React.createClass({displayName: "ShowAddButton",
     var classString, buttonText;
 
     if(this.props.displayed) {
-      classString = 'btn btn-default btn-block';
+      classString = 'btn btn-lg btn-default btn-block show-add-btn';
       buttonText = 'Cancel';
     } else {
-      classString = 'btn btn-success btn-block';
-      buttonText = 'Create New Item';
+      classString = 'btn btn-lg btn-success btn-block show-add-btn';
+      buttonText = 'Add An Awesome Book';
     }
 
     return (
@@ -250,7 +267,7 @@ module.exports = ShowAddButton;
 var React = require('react'),
     Feed = require('./components/Feed');
 
-React.renderComponent(
+React.render(
   React.createElement(Feed, null),
   document.getElementById('app')
 );

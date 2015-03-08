@@ -10,6 +10,7 @@ var FeedForm = React.createClass({
     var newItem = {
       title: this.refs.title.getDOMNode().value,
       description: this.refs.desc.getDOMNode().value,
+      isbn: this.refs.isbn.getDOMNode().value,
       voteCount: 0
     };
 
@@ -31,6 +32,7 @@ var FeedForm = React.createClass({
 
           <input ref="title" type="text" className="form-control" placeholder="Title" />
           <input ref="desc" type="text" className="form-control" placeholder="Description" />
+          <input ref="isbn" type="text" className="form-control" placeholder="ISBN eg: 0871404532" />
 
           <button type="submit" className="btn btn-primary btn-block">Add</button>
         </div>

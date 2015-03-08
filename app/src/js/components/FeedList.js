@@ -11,15 +11,14 @@ var FeedList = React.createClass({
       return <FeedItem id={item.id}
                        title={item.title}
                        desc={item.description}
+                       isbn={item.isbn}
                        voteCount={item.voteCount}
                        onVote={this.props.onVote} />
     }.bind(this));
 
     return (
-      <div className="container">
-        <ul className="list-group">
+      <div className="container clearfix">
           {feedItems}
-        </ul>
       </div>
     );
   }
